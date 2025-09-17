@@ -1,0 +1,62 @@
+
+package com.zack.example.ids.controller;
+
+import com.zack.example.ids.security.JwtService;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+
+@SpringBootTest
+@AutoConfigureMockMvc
+public class AuthControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+
+    @Autowired
+    JwtService jwtService;
+
+    @Test
+    void testLoginSuccess() throws Exception {
+        String json = "{\"username\":\"admin\",\"password\":\"password\"}";
+
+        mockMvc.perform(post("/auth/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.token").exists());
+    }
+
+    @Test
+    void testLoginFailure() throws Exception {
+        String json = "{\"username\":\"admin\",\"password\":\"wrongpassword\"}";
+
+        mockMvc.perform(post("/auth/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void testGetUser() throws Exception {
+
+        String jwtToken = jwtService.generateToken("admin");
+
+        String username = "admin";
+        mockMvc.perform(get("/auth/users/" + username)
+                .header("Authorization", "Bearer " + jwtToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.username").value(username))
+                .andExpect(jsonPath("$.fullName").value("Admin User"))
+                .andExpect(jsonPath("$.email").value("admin@example.com"));
+    }
+}
