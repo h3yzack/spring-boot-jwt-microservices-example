@@ -1,0 +1,13 @@
+
+version = '0.0.1-SNAPSHOT'
+description = 'Gateway Service Example'
+
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	implementation 'org.springframework.cloud:spring-cloud-starter-gateway-server-webflux'
+    
+	testImplementation 'io.projectreactor:reactor-test'
+}
+
+

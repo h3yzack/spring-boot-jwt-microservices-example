@@ -1,0 +1,51 @@
+{
+    "name": "Spring Boot JWT Microservices Example",
+    "dockerFile": "Dockerfile",
+    "context": "..",
+    "runArgs": ["--init", "--network=host"],
+
+    "remoteEnv": {
+        "LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}"
+    },
+
+    "containerEnv": {
+        "JAVA_HOME": "/usr/lib/jvm/java-21-openjdk-arm64"
+    },
+
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "terminal.integrated.shell.linux": "/bin/bash",
+                "java.jdt.ls.java.home": "/usr/lib/jvm/java-21-openjdk-arm64"
+            },
+            "extensions": [
+                "redhat.java",
+                "vscjava.vscode-java-pack",
+                "vscjava.vscode-gradle",
+                "vscjava.vscode-java-debug",
+                "vscjava.vscode-java-test",
+                "dbaeumer.vscode-eslint",
+                "redhat.vscode-yaml",
+                "vmware.vscode-boot-dev-pack",
+                "vscjava.vscode-lombok",
+                "esbenp.prettier-vscode",
+                "gruntfuggly.todo-tree",
+                "mutantdino.resourcemonitor"
+            ]
+        }
+    },
+    "features": {
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+        "ghcr.io/ebaskoro/devcontainer-features/sdkman:1": {
+            "candidate": "gradle"
+        }
+    },
+
+    "mounts": [
+        "source=${localWorkspaceFolder},target=/app/${localWorkspaceFolderBasename},type=bind,consistency=cached"
+    ],
+
+    "forwardPorts": [8080, 8081, 8082],
+
+    "remoteUser": "vscode"
+}
