@@ -1,5 +1,6 @@
 rootProject.name = "spring-boot-jwt-microservices-example"
 
-include("gateway-service")
+include("common-lib")
+// include("gateway-service")
 include("identity-service")
-include("demo-service")
+// include("demo-service")
