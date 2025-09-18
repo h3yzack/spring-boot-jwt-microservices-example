@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  gateway-service:
+    image: gateway-service:local
+    build:
+      context: ./gateway-service
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - identity-service
+      - demo-service
+
+  identity-service:
+    image: identity-service:local
+    build:
+      context: ./identity-service
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+
+  demo-service:
+    image: demo-service:local
+    build:
+      context: ./demo-service
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8082"

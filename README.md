@@ -26,23 +26,39 @@ This project demonstrates a microservices architecture using Spring Boot, with J
 
 ## Getting Started
 
+
 ### Prerequisites
-- Java 17 or higher
-- Gradle (wrapper included)
+- Java 17 or higher (for local builds)
+- Docker & Docker Compose
+
 
 ### Build the Project
 
+To build all services and Docker images:
+
 ```bash
 ./gradlew build
+docker-compose build
 ```
 
-### Run Services
-You can run each service individually:
+### Run All Services with Docker Compose
+
+Start all services using Docker Compose:
 
 ```bash
-./gradlew :gateway-service:bootRun
-./gradlew :identity-service:bootRun
-./gradlew :demo-service:bootRun
+docker-compose up
+```
+
+This will build and run the `gateway-service`, `identity-service`, and `demo-service` containers. Each service will be available on the following ports:
+
+- Gateway Service: [http://localhost:8080](http://localhost:8080)
+- Identity Service: [http://localhost:8081](http://localhost:8081)
+- Demo Service: [http://localhost:8082](http://localhost:8082)
+
+To stop the services, press `Ctrl+C` and run:
+
+```bash
+docker-compose down
 ```
 
 ### Endpoints Overview
@@ -55,7 +71,18 @@ You can run each service individually:
 - **Gateway Service**
   - Routes all requests and enforces authentication
 
+
 ## Configuration
 
 Each service has its own `application.yml` for configuration. Update database, port, and JWT secret settings as needed.
+
+## Development (Optional)
+
+You can still run services locally for development using Gradle:
+
+```bash
+./gradlew :gateway-service:bootRun
+./gradlew :identity-service:bootRun
+./gradlew :demo-service:bootRun
+```
 
