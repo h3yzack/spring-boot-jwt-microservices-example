@@ -1,8 +1,6 @@
 package com.zack.demo.controller;
 
-import java.security.Principal;
-import java.util.List;
-
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,14 +24,15 @@ public class DemoController {
     }
 
     // Secured endpoint demonstrating Feign inter-service communication
-    @GetMapping("/items")
-    public List<String> getItems(Principal principal) {
-        String username = principal.getName();
-        UserDto user = identityClient.getUser(username); // Feign call
-        return List.of(
-                "Owner: " + user.fullName(),
-                "email: " + user.email(),
-                "username: " + user.username()
-        );
+    @GetMapping("/whoami")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+    public UserDto whoami() {
+        return identityClient.getUser(); // Feign call
+    }
+
+    @GetMapping("/admin/stats")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String adminStats() {
+        return "Admin stats only for ROLE_ADMIN";
     }
 }

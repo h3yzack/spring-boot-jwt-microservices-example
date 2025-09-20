@@ -19,6 +19,21 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8081:8081"
+    environment:
+      - WAIT_HOSTS=identity-db:3306
+    depends_on:
+      - identity-db
+
+  identity-db:
+    image: mariadb:latest
+    restart: always
+    environment:
+      - MARIADB_DATABASE=identity_db
+      - MARIADB_USER=identity_user
+      - MARIADB_PASSWORD=identity_pass
+      - MARIADB_ROOT_PASSWORD=root_pass
+    ports:
+      - "3307:3306"
 
   demo-service:
     image: demo-service:local

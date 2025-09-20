@@ -1,41 +1,43 @@
 package com.zack.example.ids.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.nimbusds.jose.JOSEException;
 import com.zack.example.common.dto.LoginRequest;
 import com.zack.example.common.dto.LoginResponse;
-import com.zack.example.common.dto.UserDto;
-import com.zack.example.ids.security.JwtService;
+import com.zack.example.ids.service.AuthenticationService;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final JwtService jwtService;
+    private final AuthenticationService authenticationService;
 
-    public AuthController(JwtService jwtService) {
-        this.jwtService = jwtService;
+    public AuthController(AuthenticationService authenticationService) {
+        this.authenticationService = authenticationService;
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest req) throws JOSEException {
-        if ("admin".equals(req.username()) && "password".equals(req.password())) {
-            String token = jwtService.generateToken(req.username());
-            return ResponseEntity.ok(new LoginResponse(token));
-        }
-        return ResponseEntity.status(401).build();
-    }
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest req) throws Exception {
 
-    @GetMapping("/users/{username}")
-    public UserDto getUser(@PathVariable String username) {
-        return new UserDto(username, "Admin User", "admin@example.com");
+        LoginResponse response = authenticationService.login(req.username(), req.password());
+        return ResponseEntity.ok(response);
     }
     
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<String> handleUserNotFound(UsernameNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<String> handleBadCredentials(BadCredentialsException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
+    }
 }

@@ -1,6 +1,8 @@
 FROM eclipse-temurin:21-jdk-jammy
 
-WORKDIR /app
-COPY build/libs/identity-service-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=ghcr.io/ufoscout/docker-compose-wait:latest /wait /wait
 
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+WORKDIR /app
+COPY build/libs/identity-service.jar app.jar
+
+ENTRYPOINT /wait && exec java -jar /app/app.jar

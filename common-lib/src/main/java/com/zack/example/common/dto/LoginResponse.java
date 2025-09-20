@@ -1,3 +1,5 @@
 package com.zack.example.common.dto;
 
-public record LoginResponse(String token) {}
+import java.util.List;
+
+public record LoginResponse(String token, List<String> roles) {}

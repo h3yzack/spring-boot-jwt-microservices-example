@@ -1,6 +1,6 @@
 FROM eclipse-temurin:21-jdk-jammy
 
 WORKDIR /app
-COPY build/libs/gateway-service-0.0.1-SNAPSHOT.jar app.jar
+COPY build/libs/gateway-service.jar app.jar
 
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]

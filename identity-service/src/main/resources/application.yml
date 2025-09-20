@@ -2,8 +2,19 @@ server:
   port: 8081
 
 spring:
-    application:
-        name: identity-service
+  application:
+    name: identity-service
+  datasource:
+    url: jdbc:mariadb://identity-db:3306/identity_db
+    username: identity_user
+    password: identity_pass
+    driver-class-name: org.mariadb.jdbc.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.MariaDBDialect
+
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.yaml
 
 management:
   endpoints:

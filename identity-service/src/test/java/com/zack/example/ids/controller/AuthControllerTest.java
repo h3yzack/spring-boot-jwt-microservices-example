@@ -7,13 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
+@ActiveProfiles("dev")
 @SpringBootTest
 @AutoConfigureMockMvc
 public class AuthControllerTest {
@@ -44,19 +45,5 @@ public class AuthControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json))
                 .andExpect(status().isUnauthorized());
-    }
-
-    @Test
-    void testGetUser() throws Exception {
-
-        String jwtToken = jwtService.generateToken("admin");
-
-        String username = "admin";
-        mockMvc.perform(get("/auth/users/" + username)
-                .header("Authorization", "Bearer " + jwtToken))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.username").value(username))
-                .andExpect(jsonPath("$.fullName").value("Admin User"))
-                .andExpect(jsonPath("$.email").value("admin@example.com"));
     }
 }

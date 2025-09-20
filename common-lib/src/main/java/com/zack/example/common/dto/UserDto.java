@@ -1,3 +1,5 @@
 package com.zack.example.common.dto;
 
-public record UserDto(String username, String fullName, String email) {}
+import java.util.List;
+
+public record UserDto(String username, List<String> roles) {}
